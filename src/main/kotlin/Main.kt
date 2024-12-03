@@ -47,8 +47,12 @@ class ArchiveMenu(private val noteManager: NoteManager) {
     fun show() {
         while (true) {
             println("Выбор архива:")
-            noteManager.archives.forEachIndexed { index, archive ->
-                println("${index + 1}. ${archive.name}")
+            if (noteManager.archives.isEmpty()) {
+                println("Нет доступных архивов.")
+            } else {
+                noteManager.archives.forEachIndexed { index, archive ->
+                    println("${index + 1}. ${archive.name}")
+                }
             }
             println("0. Назад")
 
@@ -83,18 +87,24 @@ class NoteMenu(private val archive: Archive) {
     fun show() {
         while (true) {
             println("Заметки в архиве '${archive.name}':")
-            archive.notes.forEachIndexed { index, note ->
-                println("${index + 1}. ${note.title}")
+            if (archive.notes.isEmpty()) {
+                println("Нет доступных заметок.")
+            } else {
+                archive.notes.forEachIndexed { index, note ->
+                    println("${index + 1}. ${note.title}")
+                }
             }
-            println("0. Назад")
             println("2. Создать заметку")
+            println("0. Назад")
+
 
             when (readLine()) {
-                "0" -> return
                 "2" -> {
                     val createNoteMenu = CreateNoteMenu(archive)
                     createNoteMenu.show()
                 }
+                "0" -> return
+
                 else -> {
                     val index = readLine()?.toIntOrNull()
                     if (index != null && index in 1..archive.notes.size) {
